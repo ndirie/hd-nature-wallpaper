@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".ui.photo.WallpaperActivity">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintTop_toTopOf="parent"
+            android:elevation="100dp"
+            app:layout_constraintBottom_toTopOf="@id/preview_card"
+            android:layout_marginTop="30dp"
+            android:id="@+id/toolbar">
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/close_back_toggle_button"
+                android:layout_width="30sp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20sp"
+                android:layout_marginTop="20sp"
+                android:adjustViewBounds="true"
+                android:padding="5dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_colorFilter="@color/white"
+                app:lottie_loop="false"
+                app:lottie_rawRes="@raw/back_to_close_icon" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:id="@+id/thumbnail_image_view"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/thumb_even_image"
+            android:scaleType="centerCrop"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/preview_card"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:barrierMargin="20dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="20dp"
+            app:cardBackgroundColor="#011918"
+            android:layout_marginHorizontal="50dp"
+            android:layout_marginTop="64dp"
+            android:layout_marginBottom="220dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_wrapBehaviorInParent="horizontal_only">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:transitionName="image_transition"
+                android:id="@+id/full_image_view"
+                android:scaleType="centerCrop"/>
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/loading_progress_anim"
+                android:layout_width="80dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:layout_height="wrap_content"
+                app:lottie_colorFilter="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/card"
+                app:layout_constraintEnd_toEndOf="@+id/card"
+                app:layout_constraintStart_toStartOf="@+id/card"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                app:lottie_loop="true"
+                app:lottie_autoPlay="true"
+                android:elevation="100dp"
+                app:lottie_rawRes="@raw/rounded_progress_bar" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/wallpaper_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="10dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:text="Set as wallpaper"
+            android:textColor="#FFFFFF"
+            app:cornerRadius="30dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="@color/button_color_1"
+            android:paddingVertical="15dp"
+            app:layout_constraintStart_toStartOf="@id/preview_card"
+            app:layout_constraintTop_toBottomOf="@id/preview_card"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/preview_card"
+            app:rippleColor="@color/button_color_1"/>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/wallpaper_options_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:elevation="100dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible">
+
+            <include
+                android:id="@+id/wallpaper_options_layout"
+                layout="@layout/image_options_layout" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/wallpaper_button_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="15dp"
+                android:text="Set"
+                android:textColor="@color/white"
+                app:cornerRadius="50dp"
+                app:iconPadding="2dp"
+                app:iconTint="@color/white"
+                app:strokeColor="@color/button_color_1"
+                app:strokeWidth="2dp"
+                app:backgroundTint="@color/button_color_1"
+                app:rippleColor="@color/black" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

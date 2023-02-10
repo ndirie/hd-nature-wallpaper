@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:id="@+id/loading_state_progress"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorSecondary"
+        android:textSize="14sp"
+        android:layout_gravity="center"
+        android:id="@+id/error_msg_tv"
+        android:padding="10dp"
+        android:text="Unable to load wallpapers!"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cornerRadius="15dp"
+        android:text="@string/retry"
+        android:layout_gravity="center"
+        android:id="@+id/retry_button"/>
+
+</LinearLayout>

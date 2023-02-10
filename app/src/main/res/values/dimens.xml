@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="action_card_height">160dp</dimen>
+    <dimen name="action_icon_size">50dp</dimen>
+    <dimen name="pager_bottom">240dp</dimen>
+    <dimen name="pager_top">74dp</dimen>
+</resources>
