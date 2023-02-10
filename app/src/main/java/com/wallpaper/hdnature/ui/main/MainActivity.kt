@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.core.widget.addTextChangedListener
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -20,6 +21,7 @@ import com.wallpaper.hdnature.R
 import com.wallpaper.hdnature.adapter.HeaderPagerAdapter
 import com.wallpaper.hdnature.databinding.ActivityMainBinding
 import com.wallpaper.hdnature.databinding.AppInfoLayoutBinding
+import com.wallpaper.hdnature.databinding.FeedbackLayoutBinding
 import com.wallpaper.hdnature.ui.about.AboutActivity
 import com.wallpaper.hdnature.utils.ext.autoScroll
 import com.wallpaper.hdnature.utils.ext.openLink
@@ -80,6 +82,7 @@ class MainActivity : AppCompatActivity() {
                     startActivity(Intent(this, AboutActivity::class.java))
                 R.id.rate_menu -> rateApp()
                 R.id.privacy_menu -> openPrivacyPolicy()
+                R.id.feedback_menu -> setupFeedbackDialog()
             }
             drawerLayout.close()
 
@@ -134,8 +137,36 @@ class MainActivity : AppCompatActivity() {
         openLink(url)
     }
 
-    private fun sendFeedback() {
+    private fun setupFeedbackDialog() {
 
+        val alertDialogBuilder = AlertDialog.Builder(this, R.style.Theme_BottomSheetDialog)
+        val alertDialog = alertDialogBuilder.create()
+
+        val view = layoutInflater.inflate(R.layout.feedback_layout, null)
+        val viewBinding = FeedbackLayoutBinding.bind(view)
+        alertDialog.setView(viewBinding.root)
+
+        viewBinding.apply {
+            val message = "{$feedbackTextEv.text}"
+            sendFeedbackButton.setOnClickListener {
+                if (message.isNotEmpty()) {
+                    sendFeedback(msg = message)
+                }
+            }
+        }
+    }
+
+    private fun sendFeedback(msg: String, subject: String = "Feedback", email: String = "nourdroidsoft@gmail.com") {
+        val intent = Intent(Intent.ACTION_SEND)
+            .setType("message/feedback")
+            .putExtra(Intent.EXTRA_EMAIL, email)
+            .putExtra(Intent.EXTRA_SUBJECT, subject)
+            .putExtra(Intent.EXTRA_TEXT, msg)
+        try {
+            startActivity(Intent.createChooser(intent, "Send feedback.."))
+        }catch (e: ActivityNotFoundException) {
+            toast("Can't send feedback! please try again.")
+        }
     }
 
 }
