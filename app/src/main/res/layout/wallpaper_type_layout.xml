@@ -28,7 +28,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
@@ -38,7 +37,6 @@
             android:padding="10dp">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/home_screen_button"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -49,7 +47,6 @@
                 app:rippleColor="@color/button_color_1" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/lock_screen_button"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,7 +57,6 @@
                 app:rippleColor="@color/button_color_1" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/home_lock_screen_button"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -71,7 +67,6 @@
                 app:rippleColor="@color/button_color_1" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/crop_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"

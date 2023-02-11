@@ -23,6 +23,7 @@ import android.provider.MediaStore
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.wallpaper.hdnature.R
@@ -349,3 +350,14 @@ fun Activity.loadMedia(){
 
 }
 
+fun Context.sendFeedback(email: String) {
+
+    val intent = Intent(Intent.ACTION_SEND)
+    intent.type = "message/rfc822"
+    intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
+    try {
+        startActivity(Intent.createChooser(intent, "Choose Email Client..."))
+    }catch (e: ActivityNotFoundException) {
+        toast("Can't send feedback! please try again.")
+    }
+}

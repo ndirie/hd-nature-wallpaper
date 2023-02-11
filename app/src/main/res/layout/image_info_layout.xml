@@ -36,7 +36,6 @@
             app:layout_constraintTop_toTopOf="@id/user_profile"
             tools:text="Photographer name" />
         <TextView
-            android:id="@+id/username_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -97,7 +96,6 @@
 
         <!--values-->
         <TextView
-            android:id="@+id/licence"
             app:layout_constraintStart_toStartOf="@id/licence_tv"
             android:layout_width="wrap_content"
             android:layout_marginTop="10dp"
@@ -120,7 +118,6 @@
             app:layout_constraintEnd_toEndOf="@id/color_tv"
             app:layout_constraintTop_toBottomOf="@+id/color_tv" />
         <TextView
-            android:id="@+id/likes"
             app:layout_constraintStart_toStartOf="@id/likes_tv"
             android:layout_width="wrap_content"
             android:layout_marginTop="10dp"
@@ -154,15 +151,13 @@
                 android:layout_height="wrap_content"
                 tools:text="Description:"
                 android:textIsSelectable="true"
-                android:id="@+id/description"
                 android:padding="5dp"
                 android:textColor="@color/colorSecondary"
                 android:textSize="14sp"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/tags_recyclerview"/>
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 

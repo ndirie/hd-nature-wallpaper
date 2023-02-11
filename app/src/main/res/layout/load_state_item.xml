@@ -9,7 +9,6 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:id="@+id/loading_state_progress"
         android:layout_gravity="center"/>
 
     <TextView
@@ -18,7 +17,6 @@
         android:textColor="@color/colorSecondary"
         android:textSize="14sp"
         android:layout_gravity="center"
-        android:id="@+id/error_msg_tv"
         android:padding="10dp"
         android:text="Unable to load wallpapers!"/>
 
@@ -27,7 +25,6 @@
         android:layout_height="wrap_content"
         app:cornerRadius="15dp"
         android:text="@string/retry"
-        android:layout_gravity="center"
-        android:id="@+id/retry_button"/>
+        android:layout_gravity="center" />
 
 </LinearLayout>

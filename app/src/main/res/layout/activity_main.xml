@@ -5,20 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:openDrawer="start"
-    android:id="@+id/drawer_layout"
     tools:context=".ui.main.MainActivity">
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <include
-            layout="@layout/app_bar_layout"
-            android:id="@+id/app_bar"/>
+            layout="@layout/app_bar_layout" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             app:menu="@menu/bottom_nav_menu"
-            android:id="@+id/bottom_nav"
             android:layout_marginBottom="10dp"
             android:paddingVertical="5dp"
             app:itemIconTint="@color/colorPrimary"
@@ -32,7 +29,6 @@
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/nav_view"
         app:menu="@menu/nav_menu"
         app:itemTextColor="@color/colorPrimary"
         app:itemIconTint="@color/colorSecondary"

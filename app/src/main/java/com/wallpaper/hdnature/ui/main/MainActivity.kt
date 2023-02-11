@@ -2,30 +2,25 @@ package com.wallpaper.hdnature.ui.main
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.widget.addTextChangedListener
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.NavigationUI.setupWithNavController
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.wallpaper.hdnature.R
 import com.wallpaper.hdnature.adapter.HeaderPagerAdapter
 import com.wallpaper.hdnature.databinding.ActivityMainBinding
-import com.wallpaper.hdnature.databinding.AppInfoLayoutBinding
-import com.wallpaper.hdnature.databinding.FeedbackLayoutBinding
 import com.wallpaper.hdnature.ui.about.AboutActivity
 import com.wallpaper.hdnature.utils.ext.autoScroll
 import com.wallpaper.hdnature.utils.ext.openLink
 import com.wallpaper.hdnature.utils.ext.openPlayStorePage
+import com.wallpaper.hdnature.utils.ext.sendFeedback
 import com.wallpaper.hdnature.utils.ext.toast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -78,11 +73,11 @@ class MainActivity : AppCompatActivity() {
         binding.navView.setNavigationItemSelectedListener {
             when(it.itemId) {
                 R.id.share_menu -> shareApp()
-                R.id.about_menu ->
-                    startActivity(Intent(this, AboutActivity::class.java))
+                R.id.about_menu -> startActivity(Intent(this, AboutActivity::class.java))
                 R.id.rate_menu -> rateApp()
                 R.id.privacy_menu -> openPrivacyPolicy()
-                R.id.feedback_menu -> setupFeedbackDialog()
+                R.id.feedback_menu -> sendFeedback(getString(R.string.my_gmail))
+                R.id.more_apps_menu -> moreAppsInPlayStore()
             }
             drawerLayout.close()
 
@@ -137,35 +132,12 @@ class MainActivity : AppCompatActivity() {
         openLink(url)
     }
 
-    private fun setupFeedbackDialog() {
-
-        val alertDialogBuilder = AlertDialog.Builder(this, R.style.Theme_BottomSheetDialog)
-        val alertDialog = alertDialogBuilder.create()
-
-        val view = layoutInflater.inflate(R.layout.feedback_layout, null)
-        val viewBinding = FeedbackLayoutBinding.bind(view)
-        alertDialog.setView(viewBinding.root)
-
-        viewBinding.apply {
-            val message = "{$feedbackTextEv.text}"
-            sendFeedbackButton.setOnClickListener {
-                if (message.isNotEmpty()) {
-                    sendFeedback(msg = message)
-                }
-            }
-        }
-    }
-
-    private fun sendFeedback(msg: String, subject: String = "Feedback", email: String = "nourdroidsoft@gmail.com") {
-        val intent = Intent(Intent.ACTION_SEND)
-            .setType("message/feedback")
-            .putExtra(Intent.EXTRA_EMAIL, email)
-            .putExtra(Intent.EXTRA_SUBJECT, subject)
-            .putExtra(Intent.EXTRA_TEXT, msg)
+    private fun moreAppsInPlayStore() {
         try {
-            startActivity(Intent.createChooser(intent, "Send feedback.."))
+            val url = "market://details?id=$packageName"
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
         }catch (e: ActivityNotFoundException) {
-            toast("Can't send feedback! please try again.")
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
         }
     }
 
