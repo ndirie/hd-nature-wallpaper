@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/drawer_layout"
     tools:openDrawer="start"
     tools:context=".ui.main.MainActivity">
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <include
+            android:id="@+id/app_bar"
             layout="@layout/app_bar_layout" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -17,6 +19,7 @@
             android:layout_height="wrap_content"
             app:menu="@menu/bottom_nav_menu"
             android:layout_marginBottom="10dp"
+            android:id="@+id/bottom_nav"
             android:paddingVertical="5dp"
             app:itemIconTint="@color/colorPrimary"
             app:itemTextColor="@color/colorSecondary"
@@ -30,6 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         app:menu="@menu/nav_menu"
+        android:id="@+id/nav_view"
         app:itemTextColor="@color/colorPrimary"
         app:itemIconTint="@color/colorSecondary"
         app:headerLayout="@layout/header_layout"

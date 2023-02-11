@@ -106,6 +106,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:layout_margin="5dp"
+                android:id="@+id/instagram_button"
                 android:background="@drawable/button_corner_bg"
                 app:srcCompat="@drawable/ic_instagram"
                 app:tint="#0DFBA8" />
@@ -114,6 +115,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
+                android:id="@+id/facebook_button"
                 android:layout_margin="5dp"
                 android:background="@drawable/button_corner_bg"
                 app:srcCompat="@drawable/ic_facebook"
@@ -124,6 +126,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_corner_bg"
                 android:padding="10dp"
+                android:id="@+id/email_button"
                 android:layout_margin="5dp"
                 app:srcCompat="@drawable/ic_email"
                 app:tint="#0DFBA8" />

@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
+        android:id="@+id/category_image_view"
         tools:srcCompat="@drawable/ic_launcher_background"
         android:transitionName="image_transition" />
     <com.airbnb.lottie.LottieAnimationView
@@ -20,6 +21,7 @@
         android:layout_height="100dp"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
+        android:id="@+id/loading_anim"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -42,6 +44,7 @@
             android:layout_height="wrap_content"
             tools:text="Category title"
             android:textColor="@color/white"
+            android:id="@+id/category_title"
             android:textSize="18sp"/>
     </LinearLayout>
 

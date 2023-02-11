@@ -2,7 +2,6 @@
     <string name="app_name">HD Nature Wallpaper</string>
     <string name="wallpapers">Wallpapers</string>
     <string name="search">Search</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="close_nav">Close navigation</string>
     <string name="open_nav">Open Navigation</string>
     <string name="share_app">Share app</string>
@@ -15,5 +14,6 @@
     <string name="more_apps">More apps</string>
 
     <string name="my_gmail">nourdroidsoft@gmail.com</string>
+    <string name="retry_tv">Retry</string>
 
 </resources>

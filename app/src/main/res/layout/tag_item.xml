@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp"
+    android:id="@+id/chip_title"
     app:chipStrokeColor="@color/white"
     app:chipStrokeWidth="1dp"
     app:chipBackgroundColor="@color/button_color_1"

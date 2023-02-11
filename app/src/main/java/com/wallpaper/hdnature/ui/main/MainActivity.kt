@@ -83,9 +83,7 @@ class MainActivity : AppCompatActivity() {
 
             false
         }
-
     }
-
 
     private val headerImages = listOf(
         "https://images.unsplash.com/photo-1549211729-86c3eb921c8a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8OXxra1hLRHBBSGo0WXx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=600&q=60",
@@ -111,7 +109,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun shareApp(){
         try {
-            val msg = "Hey, check out ${R.string.app_name} at at: https://play.google.com/store/apps/details?id=com.wallpaper.hdnature"
+            val msg = "Hey, check out ${getString(R.string.app_name)} at at: https://play.google.com/store/apps/details?id=com.wallpaper.hdnature"
             val intent = Intent(Intent.ACTION_SEND)
                 .putExtra(Intent.EXTRA_TEXT, msg)
                 .setType("text/plain")

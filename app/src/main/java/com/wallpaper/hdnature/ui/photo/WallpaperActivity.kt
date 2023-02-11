@@ -367,14 +367,6 @@ class WallpaperActivity : AppCompatActivity() {
             }
 
             cropButton.setOnClickListener {
-                /*lifecycleScope.launch(Dispatchers.IO) {
-                    val bitmap =
-                        Glide.with(binding.fullImageView).asBitmap().load(photo.urls.full)
-                            .submit()
-                            .get()
-
-                    startCropImage(bitmap)
-                }*/
                 if (fileExists(photo.fileName))
                     getUriForPhoto(photo.fileName)?.let { uri ->
                         applyWallpaper(uri)

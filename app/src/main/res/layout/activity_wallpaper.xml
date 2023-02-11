@@ -24,6 +24,7 @@
                 android:layout_marginTop="20sp"
                 android:adjustViewBounds="true"
                 android:padding="5dp"
+                android:id="@+id/close_back_toggle_button"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:lottie_colorFilter="@color/white"
@@ -35,11 +36,13 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/thumbEvenImage"
             android:scaleType="centerCrop" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/thumbnailImageView"
             android:scaleType="centerCrop"/>
 
         <com.google.android.material.card.MaterialCardView
@@ -62,6 +65,7 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:id="@+id/fullImageView"
                 android:transitionName="image_transition"
                 android:scaleType="centerCrop"/>
             <com.airbnb.lottie.LottieAnimationView
@@ -76,6 +80,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/toolbar"
                 app:lottie_loop="true"
                 app:lottie_autoPlay="true"
+                android:id="@+id/loadingProgressAnim"
                 android:elevation="100dp"
                 app:lottie_rawRes="@raw/rounded_progress_bar" />
         </com.google.android.material.card.MaterialCardView>
@@ -86,6 +91,7 @@
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:text="Set as wallpaper"
             android:textColor="#FFFFFF"
+            android:id="@+id/wallpaperButton"
             app:cornerRadius="30dp"
             app:strokeWidth="2dp"
             app:strokeColor="@color/button_color_1"
@@ -100,6 +106,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
+            android:id="@+id/wallpaperOptionsContainer"
             android:elevation="100dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -108,7 +115,9 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:visibility="visible">
 
-            <include layout="@layout/image_options_layout" />
+            <include
+                android:id="@+id/wallpaperOptionsLayout"
+                layout="@layout/image_options_layout" />
 
             <com.google.android.material.button.MaterialButton
                 android:layout_width="wrap_content"
@@ -120,6 +129,7 @@
                 android:textColor="@color/white"
                 app:cornerRadius="50dp"
                 app:iconPadding="2dp"
+                android:id="@+id/wallpaperButtonSmall"
                 app:iconTint="@color/white"
                 app:strokeColor="@color/button_color_1"
                 app:strokeWidth="2dp"

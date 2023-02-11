@@ -21,6 +21,7 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/swipe_refresh_layout"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="vertical"
@@ -29,10 +30,12 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:id="@+id/recyclerView"
                 android:layoutAnimation="@anim/layout_animation_scale_in" />
 
             <include
                 layout="@layout/load_state_item"
+                android:id="@+id/state_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="visible" />

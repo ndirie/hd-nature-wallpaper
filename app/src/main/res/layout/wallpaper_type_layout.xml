@@ -41,6 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
+                android:id="@+id/homeScreenButton"
                 android:text="Home Screen"
                 android:textColor="@color/colorOnSecondary"
                 app:cornerRadius="20dp"
@@ -53,6 +54,7 @@
                 android:padding="10dp"
                 android:text="Lock Screen"
                 android:textColor="@color/colorOnSecondary"
+                android:id="@+id/lockScreenButton"
                 app:cornerRadius="20dp"
                 app:rippleColor="@color/button_color_1" />
 
@@ -60,6 +62,7 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/home_lock_screenButton"
                 android:padding="10dp"
                 android:text="Home &amp; Lock Screen"
                 android:textColor="@color/colorOnSecondary"
@@ -70,6 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
+                android:id="@+id/cropButton"
                 android:text="Crop image"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:textColor="@color/colorOnSecondary"

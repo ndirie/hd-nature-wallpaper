@@ -42,6 +42,7 @@
             android:textColor="@color/colorSecondary"
             android:textIsSelectable="true"
             android:textSize="16sp"
+            android:id="@+id/usernameTv"
             android:layout_marginTop="5dp"
             app:layout_constraintBottom_toBottomOf="@id/user_profile"
             app:layout_constraintStart_toEndOf="@id/user_profile"
@@ -123,6 +124,7 @@
             android:layout_marginTop="10dp"
             android:layout_height="wrap_content"
             tools:text="100k"
+            android:id="@+id/likes"
             android:textColor="@color/colorSecondary"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="@id/likes_tv"
@@ -152,12 +154,14 @@
                 tools:text="Description:"
                 android:textIsSelectable="true"
                 android:padding="5dp"
+                android:id="@+id/description"
                 android:textColor="@color/colorSecondary"
                 android:textSize="14sp"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:id="@+id/tagsRecyclerview"/>
 
         </LinearLayout>
 

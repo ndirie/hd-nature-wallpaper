@@ -52,7 +52,7 @@ class WallpaperPhotoAdapter(
                 })
                 .into(binding.wallpaperImageView)
             binding.apply {
-                countLikesTv.isVisible = wallpaperModel.likes!! > 0
+                countLikesTv.isVisible = wallpaperModel.likes > 0
                 countLikesTv.text = wallpaperModel.likes.toPrettyString()
             }
         }
