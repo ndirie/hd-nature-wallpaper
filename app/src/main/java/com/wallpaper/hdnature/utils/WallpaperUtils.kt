@@ -2,8 +2,10 @@ package com.wallpaper.hdnature.utils
 
 import android.app.WallpaperManager
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.media.ThumbnailUtils
+import android.net.Uri
 import android.os.Build
 import java.io.IOException
 import kotlin.math.roundToInt
@@ -29,15 +31,20 @@ fun Context.applyWallpaper(
         )
         else scaledBitmap
     try {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            if (flag != null)
-                wallpaperManager.setBitmap(bitmap, null, true, flag)
-            else
-                wallpaperManager.setBitmap(bitmap, null, true)
+        if (flag != null) {
+            wallpaperManager.setBitmap(bitmap, null, true, flag)
         } else {
-            wallpaperManager.setBitmap(bitmap)
+            wallpaperManager.setBitmap(bitmap, null, true)
         }
     } catch (e: IOException) {
         e.printStackTrace()
     }
+}
+
+fun Context.setWallpaper(uri: Uri) {
+    val intent = Intent(Intent.ACTION_ATTACH_DATA)
+        .addCategory(Intent.CATEGORY_DEFAULT)
+        .setDataAndType(uri, "image/*")
+        .putExtra("mimeType", "image/*")
+    startActivity(Intent.createChooser(intent, "Set as wallpaper"))
 }

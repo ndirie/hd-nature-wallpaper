@@ -1,13 +1,13 @@
 package com.wallpaper.hdnature.ui.photo
 
 import android.Manifest
-import android.app.Activity
 import android.app.WallpaperManager
 import android.content.BroadcastReceiver
+import android.content.ContentValues
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Bitmap
-import android.graphics.ImageDecoder
+import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -15,28 +15,23 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.provider.MediaStore.Images.Media.getBitmap
+import android.provider.MediaStore
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.app.ActivityCompat
-import androidx.core.content.FileProvider
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.animation.PathInterpolatorCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.Target
-import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.wallpaper.hdnature.R
 import com.wallpaper.hdnature.data.model.photo.PhotoModel
@@ -46,12 +41,11 @@ import com.wallpaper.hdnature.ui.viewmodel.WallpaperViewModel
 import com.wallpaper.hdnature.utils.Result
 import com.wallpaper.hdnature.utils.ScreenMeasure
 import com.wallpaper.hdnature.utils.WALLPAPER_MODEL_EXTRA
+import com.wallpaper.hdnature.utils.applyWallpaper
 import com.wallpaper.hdnature.utils.ext.fadeVisibility
-import com.wallpaper.hdnature.utils.ext.fileExists
 import com.wallpaper.hdnature.utils.ext.fileName
 import com.wallpaper.hdnature.utils.ext.fitFullScreen
 import com.wallpaper.hdnature.utils.ext.getPhotoUrl
-import com.wallpaper.hdnature.utils.ext.getUriForPhoto
 import com.wallpaper.hdnature.utils.ext.hasWritePermission
 import com.wallpaper.hdnature.utils.ext.hideSystemUI
 import com.wallpaper.hdnature.utils.ext.isOrientationLandscape
@@ -65,15 +59,14 @@ import com.wallpaper.hdnature.utils.ext.showSystemUI
 import com.wallpaper.hdnature.utils.ext.toast
 import com.wallpaper.hdnature.utils.playForward
 import com.wallpaper.hdnature.utils.playReverse
+import com.wallpaper.hdnature.utils.setWallpaper
 import com.wallpaper.hdnature.work.download.ACTION_DOWNLOAD_COMPLETE
-import com.wallpaper.hdnature.work.download.DATA_URI
 import com.wallpaper.hdnature.work.download.DownloadManagerWrapper
 import com.wallpaper.hdnature.work.download.DownloadWorker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileOutputStream
+import java.io.FileNotFoundException
 import java.io.IOException
 import javax.inject.Inject
 
@@ -103,13 +96,12 @@ class WallpaperActivity : AppCompatActivity() {
     @Inject
     lateinit var downloadManagerWrapper: DownloadManagerWrapper
 
-    private var permissionLauncher: ActivityResultLauncher<Array<String>>? = null
 
     private var isWallpaperLoaded = false
     override fun onStart() {
         super.onStart()
         downloadReceiver = registerReceiver(IntentFilter(ACTION_DOWNLOAD_COMPLETE)) {
-            it?.let { handleDownloadIntent(it) }
+            it?.let { handleDownloadIntent() }
         }
     }
     override fun onStop() {
@@ -350,55 +342,68 @@ class WallpaperActivity : AppCompatActivity() {
         viewBinding.apply {
             homeScreenButton.setOnClickListener {
                 setupLoadingDialog()
-                setWallpaper(photo.urls.full, WallpaperFlag.HOME_SCREEN)
+                setWallpaper(WallpaperFlag.HOME_SCREEN)
                 alertDialogBuilder.dismiss()
             }
 
             lockScreenButton.setOnClickListener {
                 setupLoadingDialog()
-                setWallpaper(photo.urls.full, WallpaperFlag.LOCK_SCREEN)
+                setWallpaper(WallpaperFlag.LOCK_SCREEN)
                 alertDialogBuilder.dismiss()
             }
 
             homeLockScreenButton.setOnClickListener {
                 alertDialogBuilder.dismiss()
-                setWallpaper(photo.urls.full, WallpaperFlag.BOTH)
+                setWallpaper(WallpaperFlag.BOTH)
                 setupLoadingDialog()
             }
 
-            cropButton.setOnClickListener {
-                if (fileExists(photo.fileName))
-                    getUriForPhoto(photo.fileName)?.let { uri ->
-                        applyWallpaper(uri)
-                    } ?: run { downloadWallpaper(photo, 2) }
-                else downloadWallpaper(photo, 1)
+            cropImageButton.setOnClickListener {
+                drawableToBitmap(binding.fullImageView.drawable)?.let { bitmap -> bitmapToUri(bitmap)?.let { applyWallpaper(it) } }
+            }
+
+            useSystemCrop.setOnClickListener {
+                //drawableToBitmap(binding.fullImageView.drawable)?.let { it1 -> startCropImage(it1) }
+                drawableToBitmap(binding.fullImageView.drawable)?.let { bitmap ->
+                    bitmapToUri(bitmap)?.let { uri ->
+                        setWallpaper(uri) }
+                    }
                 alertDialogBuilder.dismiss()
             }
         }
         alertDialogBuilder.show()
     }
 
-    private fun handleDownloadIntent(intent: Intent) {
-        when {
-            intent.hasExtra(DATA_URI) -> {
-                when {
-                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
-                        intent.getParcelableExtra(DATA_URI, Uri::class.java)?.let {
-                            applyWallpaper(it)
-                        } ?: @Suppress("DEPRECATION")
-                        intent.getParcelableExtra<Uri>(DATA_URI).let {
-                            if (it != null) {
-                                applyWallpaper(it)
-                            }
+    private fun handleDownloadIntent() {
+        /*when {
+            intent.hasExtra(DATA_URI) -> when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
+                    intent.getParcelableExtra(DATA_URI, Uri::class.java)?.let {
+                        applyWallpaper(it)
+                    } ?: @Suppress("DEPRECATION")
+                    intent.getParcelableExtra<Uri>(DATA_URI).let {
+                        if (it != null) {
+
                         }
                     }
                 }
             }
             else -> toast("no uri")
+        }*/
+        try {
+            drawableToBitmap(binding.fullImageView.drawable)?.let { bitmap -> bitmapToUri(bitmap)?.let { applyWallpaper(it) } }
+        }catch (e: Exception) {
+            e.printStackTrace()
+        }catch (e: RuntimeException) {
+            e.printStackTrace()
+
+        }catch (e: FileNotFoundException) {
+            e.printStackTrace()
+
+        }catch (e: NullPointerException) {
+            e.printStackTrace()
         }
-
     }
-
     private fun applyWallpaper(uri: Uri){
         try {
             startActivity(wallpaperManager.getCropAndSetWallpaperIntent(uri))
@@ -407,14 +412,12 @@ class WallpaperActivity : AppCompatActivity() {
             viewModel.prepareBitmapFromUri(contentResolver, uri)
         }
     }
-
     private fun observeWallpaperBitmapResult() {
         viewModel.wallpaperBitmap.observe(this) {
             if (it is Result.Success) setWallpaperWithBitmap(it.value)
             else toast("Failed to set wallpaper")
         }
     }
-
     private fun setWallpaperWithBitmap(bitmap: Bitmap) {
         lifecycleScope.launch(Dispatchers.Default){
             try {
@@ -424,7 +427,6 @@ class WallpaperActivity : AppCompatActivity() {
             }
         }
     }
-
     private fun downloadPhoto(photo: PhotoModel){
         if (hasWritePermission()){
             val url = getPhotoUrl(photo)
@@ -434,7 +436,6 @@ class WallpaperActivity : AppCompatActivity() {
             toast("Download started")
         } else requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, requestCode = 0)
     }
-
     private fun downloadWallpaper(photo: PhotoModel, type: Int) {
         if (hasWritePermission())
             if (type == 1) {
@@ -469,37 +470,87 @@ class WallpaperActivity : AppCompatActivity() {
         }
     }
 
+    private fun bitmapToUri(bitmap: Bitmap): Uri? = contentResolver.insert(
+        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+        ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "temp")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+        }
+    )?.let {
+        contentResolver.openOutputStream(it).use {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+        }
+        it
+    }
+
+    private fun drawableToBitmap(drawable: Drawable?): Bitmap? {
+        if (drawable is BitmapDrawable)
+            return if (drawable.bitmap != null)
+                drawable.bitmap
+            else null
+        var bitmap: Bitmap? = null
+        if (drawable?.intrinsicWidth != null)
+            bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+
+        if (bitmap != null) {
+            val canvas = Canvas(bitmap)
+            drawable?.setBounds(0,0,canvas.width, canvas.height)
+            drawable?.draw(canvas)
+        }
+        return bitmap
+    }
+
+
     private enum class WallpaperFlag {
         HOME_SCREEN,
         LOCK_SCREEN,
         BOTH
     }
 
-    private fun setWallpaper(url: String, flag: WallpaperFlag) {
-        Glide.with(this)
+    private fun setWallpaper(flag: WallpaperFlag) {
+        /*Glide.with(this)
             .asBitmap()
             .load(url)
             .into(object : CustomTarget<Bitmap>() {
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        when(flag) {
-                            WallpaperFlag.HOME_SCREEN -> {
-                                wallpaperManager.setBitmap(resource, null, true, WallpaperManager.FLAG_SYSTEM)
-                            }
-                            WallpaperFlag.LOCK_SCREEN -> {
-                                wallpaperManager.setBitmap(resource, null, true, WallpaperManager.FLAG_LOCK)
-                            }
-                            WallpaperFlag.BOTH -> {
-                                wallpaperManager.setBitmap(resource)
-                            }
-                        }
-                    }
 
                 }
-
                 override fun onLoadCleared(placeholder: Drawable?) {
                 }
-            })
+            })*/
+        lifecycleScope.launch(Dispatchers.IO) {
+            when(flag) {
+                WallpaperFlag.HOME_SCREEN -> {
+                    drawableToBitmap(binding.fullImageView.drawable)?.let { it1 ->
+                        applyWallpaper(
+                            it1,
+                            WallpaperManager.FLAG_SYSTEM,
+                            screenCropped = true
+                        )
+                    }
+                    //wallpaperManager.setBitmap(drawableToBitmap(drawable), null, true, WallpaperManager.FLAG_SYSTEM)
+                }
+                WallpaperFlag.LOCK_SCREEN -> {
+                    drawableToBitmap(binding.fullImageView.drawable)?.let { it1 ->
+                        applyWallpaper(
+                            it1,
+                            WallpaperManager.FLAG_LOCK,
+                            screenCropped = true
+                        )
+                    }
+                    //wallpaperManager.setBitmap(drawableToBitmap(drawable), null, true, WallpaperManager.FLAG_LOCK)
+                }
+                WallpaperFlag.BOTH -> {
+                    drawableToBitmap(binding.fullImageView.drawable)?.let { it1 ->
+                        applyWallpaper(
+                            it1, screenCropped = true
+                        )
+                    }
+                    //wallpaperManager.setBitmap(drawableToBitmap(drawable))
+                }
+            }
+        }
+
     }
 
     private fun setupLoadingDialog() {

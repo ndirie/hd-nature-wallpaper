@@ -146,6 +146,7 @@ fun Context.shareText(subject: String, content: String){
 
 fun Activity.startCropImage(bitmap: Bitmap){
     try {
+        @Suppress("DEPRECATION")
         val url = MediaStore.Images.Media.insertImage(contentResolver, bitmap, "", "")
         val uri = Uri.parse(url)
         val intent = Intent(Intent.ACTION_ATTACH_DATA)
@@ -157,7 +158,6 @@ fun Activity.startCropImage(bitmap: Bitmap){
     }catch (e: Exception){
         e.printStackTrace()
     }
-
 }
 
 fun Context.isUsingNightMode(): Boolean {

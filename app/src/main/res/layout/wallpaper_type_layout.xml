@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="30dp"
     android:layout_margin="10dp"
-    app:cardBackgroundColor="@color/colorPrimary">
+    app:cardBackgroundColor="@color/colorOnSecondary">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/button_color_1"
+            android:background="@color/colorOnPrimary"
             android:padding="10dp"
             android:id="@+id/toolbar"
             android:text="Set as:"
@@ -43,7 +43,7 @@
                 android:padding="10dp"
                 android:id="@+id/homeScreenButton"
                 android:text="Home Screen"
-                android:textColor="@color/colorOnSecondary"
+                android:textColor="@color/colorPrimary"
                 app:cornerRadius="20dp"
                 app:rippleColor="@color/button_color_1" />
 
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="Lock Screen"
-                android:textColor="@color/colorOnSecondary"
+                android:textColor="@color/colorPrimary"
                 android:id="@+id/lockScreenButton"
                 app:cornerRadius="20dp"
                 app:rippleColor="@color/button_color_1" />
@@ -65,7 +65,18 @@
                 android:id="@+id/home_lock_screenButton"
                 android:padding="10dp"
                 android:text="Home &amp; Lock Screen"
-                android:textColor="@color/colorOnSecondary"
+                android:textColor="@color/colorPrimary"
+                app:cornerRadius="20dp"
+                app:rippleColor="@color/button_color_1" />
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/crop_image_button"
+                android:padding="10dp"
+                android:text="Crop image"
+                android:textColor="@color/colorPrimary"
                 app:cornerRadius="20dp"
                 app:rippleColor="@color/button_color_1" />
 
@@ -73,8 +84,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:id="@+id/cropButton"
-                android:text="Crop image"
+                android:id="@+id/use_system_crop"
+                android:text="Use system"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:textColor="@color/colorOnSecondary"
                 app:backgroundTint="@color/colorSecondary"

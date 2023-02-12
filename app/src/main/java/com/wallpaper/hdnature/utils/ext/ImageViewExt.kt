@@ -8,9 +8,11 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.Transformation
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.signature.ObjectKey
 import com.wallpaper.hdnature.data.model.photo.PhotoModel
 import com.wallpaper.hdnature.data.model.user.User
 import com.wallpaper.hdnature.utils.BlurHashDecoder
@@ -45,6 +47,7 @@ fun ImageView.loadPhotoUrlWithThumbnail(
     color?.let { background = ColorDrawable(Color.parseColor(it)) }
     Glide.with(context)
         .load(url)
+        .diskCacheStrategy(DiskCacheStrategy.DATA)
         .thumbnail(
             if (centerCrop) {
                 Glide.with(context).load(thumbnailUrl).centerCrop()
