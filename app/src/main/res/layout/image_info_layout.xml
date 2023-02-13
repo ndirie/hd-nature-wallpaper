@@ -35,6 +35,20 @@
             android:textIsSelectable="true"
             app:layout_constraintTop_toTopOf="@id/user_profile"
             tools:text="Photographer name" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:padding="8dp"
+            android:id="@+id/link_photo"
+            app:layout_constraintBottom_toBottomOf="@id/photographer_name_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/photographer_name_tv"
+            app:layout_constraintTop_toTopOf="@id/photographer_name_tv"
+            app:srcCompat="@drawable/round_insert_link_24"
+            app:tint="@color/colorSecondary" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -102,6 +116,7 @@
             android:layout_marginTop="10dp"
             android:layout_height="wrap_content"
             android:text="Unsplash"
+            android:id="@+id/unsplash_tv"
             android:textColor="@color/colorPrimary"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="@id/licence_tv"

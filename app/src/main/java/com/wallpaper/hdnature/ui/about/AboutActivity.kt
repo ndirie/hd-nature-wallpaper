@@ -13,6 +13,7 @@ import com.wallpaper.hdnature.R
 import com.wallpaper.hdnature.data.model.category.CategoryModel
 import com.wallpaper.hdnature.databinding.ActivityAboutBinding
 import com.wallpaper.hdnature.utils.ext.info
+import com.wallpaper.hdnature.utils.ext.sendEmail
 import com.wallpaper.hdnature.utils.ext.sendFeedback
 
 class AboutActivity : AppCompatActivity() {
@@ -39,9 +40,7 @@ class AboutActivity : AppCompatActivity() {
             }
 
             emailButton.setOnClickListener {
-                sendFeedback(
-                    email = getString(R.string.app_name)
-                )
+                sendEmail(to = getString(R.string.my_gmail))
             }
 
         }

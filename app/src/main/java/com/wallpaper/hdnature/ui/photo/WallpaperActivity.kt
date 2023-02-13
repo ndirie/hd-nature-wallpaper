@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.WallpaperManager
 import android.content.BroadcastReceiver
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Bitmap
@@ -16,6 +17,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.activity.result.ActivityResultLauncher
@@ -98,18 +100,7 @@ class WallpaperActivity : AppCompatActivity() {
 
 
     private var isWallpaperLoaded = false
-    override fun onStart() {
-        super.onStart()
-        downloadReceiver = registerReceiver(IntentFilter(ACTION_DOWNLOAD_COMPLETE)) {
-            it?.let { handleDownloadIntent() }
-        }
-    }
-    override fun onStop() {
-        super.onStop()
-        downloadReceiver?.let {
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(it)
-        }
-    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWallpaperBinding.inflate(layoutInflater)
@@ -274,15 +265,26 @@ class WallpaperActivity : AppCompatActivity() {
                 }
 
                 shareImageButton.setOnClickListener {
-                    photo.description?.let {
+                    /*photo.description?.let {
                         val share = Intent.createChooser(Intent().apply {
                             action = Intent.ACTION_SEND
                             type = "text/plain"
                             putExtra(Intent.EXTRA_TEXT, photo.links?.html)
                             putExtra(Intent.EXTRA_TITLE, photo.description)
-                        }, null)
+                        }, "Share image:")
                         startActivity(share)
+                    }*/
+                    setupLoadingDialog(3000, "Share now")
+                    lifecycleScope.launch(Dispatchers.Default) {
+                        drawableToBitmap(binding.fullImageView.drawable)?.let { bitmap ->
+                            bitmapToUri(bitmap, photo)?.let { uri ->
+                                shareImage(
+                                    uri
+                                )
+                            }
+                        }
                     }
+
                 }
             }
 
@@ -341,13 +343,13 @@ class WallpaperActivity : AppCompatActivity() {
         alertDialogBuilder.setContentView(view)
         viewBinding.apply {
             homeScreenButton.setOnClickListener {
-                setupLoadingDialog()
+                setupLoadingDialog(5000, "Set wallpaper done successfully")
                 setWallpaper(WallpaperFlag.HOME_SCREEN)
                 alertDialogBuilder.dismiss()
             }
 
             lockScreenButton.setOnClickListener {
-                setupLoadingDialog()
+                setupLoadingDialog(5000, "Set wallpaper done successfully")
                 setWallpaper(WallpaperFlag.LOCK_SCREEN)
                 alertDialogBuilder.dismiss()
             }
@@ -355,27 +357,26 @@ class WallpaperActivity : AppCompatActivity() {
             homeLockScreenButton.setOnClickListener {
                 alertDialogBuilder.dismiss()
                 setWallpaper(WallpaperFlag.BOTH)
-                setupLoadingDialog()
-            }
-
-            cropImageButton.setOnClickListener {
-                drawableToBitmap(binding.fullImageView.drawable)?.let { bitmap -> bitmapToUri(bitmap)?.let { applyWallpaper(it) } }
+                setupLoadingDialog(5000, "Set wallpaper done successfully")
             }
 
             useSystemCrop.setOnClickListener {
                 //drawableToBitmap(binding.fullImageView.drawable)?.let { it1 -> startCropImage(it1) }
-                drawableToBitmap(binding.fullImageView.drawable)?.let { bitmap ->
-                    bitmapToUri(bitmap)?.let { uri ->
-                        setWallpaper(uri) }
+                setupLoadingDialog(2000, null)
+                lifecycleScope.launch(Dispatchers.Default) {
+                    drawableToBitmap(binding.fullImageView.drawable)?.let { bitmap ->
+                        bitmapToUri(bitmap, photo)?.let { uri ->
+                            setWallpaper(uri) }
                     }
+                }
                 alertDialogBuilder.dismiss()
             }
         }
         alertDialogBuilder.show()
     }
 
-    private fun handleDownloadIntent() {
-        /*when {
+    /*private fun handleDownloadIntent(photo: PhotoModel) {
+        when {
             intent.hasExtra(DATA_URI) -> when {
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
                     intent.getParcelableExtra(DATA_URI, Uri::class.java)?.let {
@@ -389,9 +390,9 @@ class WallpaperActivity : AppCompatActivity() {
                 }
             }
             else -> toast("no uri")
-        }*/
+        }
         try {
-            drawableToBitmap(binding.fullImageView.drawable)?.let { bitmap -> bitmapToUri(bitmap)?.let { applyWallpaper(it) } }
+            drawableToBitmap(binding.fullImageView.drawable)?.let { bitmap -> bitmapToUri(bitmap, photo = photo)?.let { applyWallpaper(it) } }
         }catch (e: Exception) {
             e.printStackTrace()
         }catch (e: RuntimeException) {
@@ -426,7 +427,7 @@ class WallpaperActivity : AppCompatActivity() {
                 error("Error setting wallpaper bitmap: $bitmap")
             }
         }
-    }
+    }*/
     private fun downloadPhoto(photo: PhotoModel){
         if (hasWritePermission()){
             val url = getPhotoUrl(photo)
@@ -470,10 +471,10 @@ class WallpaperActivity : AppCompatActivity() {
         }
     }
 
-    private fun bitmapToUri(bitmap: Bitmap): Uri? = contentResolver.insert(
+    private fun bitmapToUri(bitmap: Bitmap, photo: PhotoModel): Uri? = contentResolver.insert(
         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
         ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "temp")
+            put(MediaStore.Images.Media.DISPLAY_NAME, photo.fileName)
             put(MediaStore.Images.Media.MIME_TYPE, "image/png")
         }
     )?.let {
@@ -553,7 +554,24 @@ class WallpaperActivity : AppCompatActivity() {
 
     }
 
-    private fun setupLoadingDialog() {
+    private fun shareImage(uri: Uri): Boolean {
+        return try {
+            val shareIntent = Intent(Intent.ACTION_SEND)
+            shareIntent.type = "text/plain"
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "My application name")
+            var shareMessage = "\nLet me recommend you this application\n\n"
+            shareMessage = """${shareMessage}http://play.google.com/store/apps/details?id=com.wallpaper.hdnature"""
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage)
+            startActivity(Intent.createChooser(shareIntent, "choose one"))
+            true
+        } catch (e: Exception) {
+            e.message?.let { Log.d("shareImage", it) }
+            false
+        }
+    }
+
+    private fun setupLoadingDialog(delay: Long, message: String?) {
         val alertDialog = AlertDialog.Builder(this, R.style.Theme_BottomSheetDialog)
         val progressView = layoutInflater.inflate(R.layout.loading_progress, null)
         alertDialog.setView(progressView)
@@ -564,8 +582,9 @@ class WallpaperActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper())
             .postDelayed({
                 alert.dismiss()
-                toast("Wallpaper set successfully")
-                         }, 5000 )
+                if (message != null)
+                    toast(message)
+                         }, delay )
     }
 
 }

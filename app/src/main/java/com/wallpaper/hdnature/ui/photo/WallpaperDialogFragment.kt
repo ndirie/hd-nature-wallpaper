@@ -19,6 +19,7 @@ import com.wallpaper.hdnature.ui.category.CategoryActivity
 import com.wallpaper.hdnature.ui.viewmodel.WallpaperViewModel
 import com.wallpaper.hdnature.utils.QUERY_EXTRA
 import com.wallpaper.hdnature.utils.ext.loadProfilePicture
+import com.wallpaper.hdnature.utils.ext.openLink
 import com.wallpaper.hdnature.utils.ext.toPrettyString
 import com.wallpaper.hdnature.utils.ext.toast
 import dagger.hilt.android.AndroidEntryPoint
@@ -78,6 +79,22 @@ class WallpaperDialogFragment: BottomSheetDialogFragment() {
             tagsRecyclerview.apply {
                 layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                 adapter = tagadapter
+            }
+
+            unsplashTv.setOnClickListener {
+                requireContext().openLink("https://unsplash.com/")
+            }
+
+            userProfile.setOnClickListener {
+                wallpaperModel?.user?.instagram_username?.let { url -> requireContext().openLink(url) }
+            }
+
+            photographerNameTv.setOnClickListener {
+                wallpaperModel?.user?.portfolio_url?.let { url -> requireContext().openLink(url) }
+            }
+
+            linkPhoto.setOnClickListener {
+                wallpaperModel?.links?.html?.let { url -> requireContext().openLink(url) }
             }
 
         }

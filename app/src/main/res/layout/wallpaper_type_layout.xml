@@ -70,17 +70,6 @@
                 app:rippleColor="@color/button_color_1" />
 
             <com.google.android.material.button.MaterialButton
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/crop_image_button"
-                android:padding="10dp"
-                android:text="Crop image"
-                android:textColor="@color/colorPrimary"
-                app:cornerRadius="20dp"
-                app:rippleColor="@color/button_color_1" />
-
-            <com.google.android.material.button.MaterialButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"

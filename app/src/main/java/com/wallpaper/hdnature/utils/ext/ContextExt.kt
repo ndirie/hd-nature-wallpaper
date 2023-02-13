@@ -130,10 +130,17 @@ fun Context.openPlayStorePage(){
     }
 }
 
-fun Context.openLink(url:String){
+fun Context.openLink(url:String?){
     val i = Intent(Intent.ACTION_VIEW)
+    if (url == null)
+        return
     i.data = Uri.parse(url)
-    startActivity(i)
+    try {
+        startActivity(i)
+    }catch (e: ActivityNotFoundException) {
+        e.printStackTrace()
+    }
+
 }
 fun Context.shareText(subject: String, content: String){
     val intent = Intent(Intent.ACTION_SEND).apply {
@@ -359,5 +366,17 @@ fun Context.sendFeedback(email: String) {
         startActivity(Intent.createChooser(intent, "Choose Email Client..."))
     }catch (e: ActivityNotFoundException) {
         toast("Can't send feedback! please try again.")
+    }
+}
+
+fun Context.sendEmail(to: String = "nourdroidsoft@gmail.com", subject: String = "", body: String = "") {
+    val intent = Intent(Intent.ACTION_SENDTO).apply {
+        data = Uri.parse("mailto:") // only email apps should handle this
+        putExtra(Intent.EXTRA_EMAIL, arrayOf(to))
+        putExtra(Intent.EXTRA_SUBJECT, subject)
+        putExtra(Intent.EXTRA_TEXT, body)
+    }
+    if (intent.resolveActivity(packageManager) != null) {
+        startActivity(intent)
     }
 }
