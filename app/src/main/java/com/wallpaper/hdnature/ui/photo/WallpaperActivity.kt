@@ -2,11 +2,8 @@ package com.wallpaper.hdnature.ui.photo
 
 import android.Manifest
 import android.app.WallpaperManager
-import android.content.BroadcastReceiver
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
@@ -20,16 +17,13 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.view.animation.DecelerateInterpolator
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.animation.PathInterpolatorCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
@@ -40,7 +34,6 @@ import com.wallpaper.hdnature.data.model.photo.PhotoModel
 import com.wallpaper.hdnature.databinding.ActivityWallpaperBinding
 import com.wallpaper.hdnature.databinding.WallpaperTypeLayoutBinding
 import com.wallpaper.hdnature.ui.viewmodel.WallpaperViewModel
-import com.wallpaper.hdnature.utils.Result
 import com.wallpaper.hdnature.utils.ScreenMeasure
 import com.wallpaper.hdnature.utils.WALLPAPER_MODEL_EXTRA
 import com.wallpaper.hdnature.utils.applyWallpaper
@@ -53,7 +46,6 @@ import com.wallpaper.hdnature.utils.ext.hideSystemUI
 import com.wallpaper.hdnature.utils.ext.isOrientationLandscape
 import com.wallpaper.hdnature.utils.ext.loadBlurredImage
 import com.wallpaper.hdnature.utils.ext.loadPhotoUrlWithThumbnail
-import com.wallpaper.hdnature.utils.ext.registerReceiver
 import com.wallpaper.hdnature.utils.ext.requestPermission
 import com.wallpaper.hdnature.utils.ext.setTransparentNavigation
 import com.wallpaper.hdnature.utils.ext.setTransparentStatusBar
@@ -62,14 +54,11 @@ import com.wallpaper.hdnature.utils.ext.toast
 import com.wallpaper.hdnature.utils.playForward
 import com.wallpaper.hdnature.utils.playReverse
 import com.wallpaper.hdnature.utils.setWallpaper
-import com.wallpaper.hdnature.work.download.ACTION_DOWNLOAD_COMPLETE
 import com.wallpaper.hdnature.work.download.DownloadManagerWrapper
 import com.wallpaper.hdnature.work.download.DownloadWorker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.FileNotFoundException
-import java.io.IOException
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -79,7 +68,6 @@ class WallpaperActivity : AppCompatActivity() {
     private var screenMeasure: ScreenMeasure? = null
 
     //private val favoriteViewModel: FavoriteViewModel by viewModels()
-    private var uri: Uri? = null
 
     private var thumbEven = false
     private var isLastTaskComplete = true
@@ -91,7 +79,7 @@ class WallpaperActivity : AppCompatActivity() {
     }
 
     private val viewModel: WallpaperViewModel by viewModels()
-    private var downloadReceiver: BroadcastReceiver? = null
+    //private var downloadReceiver: BroadcastReceiver? = null
 
     @Inject
     lateinit var wallpaperManager: WallpaperManager
@@ -461,11 +449,11 @@ class WallpaperActivity : AppCompatActivity() {
                 AlertDialog.Builder(this, R.style.Theme_BottomSheetDialog)
                     .setTitle("Permission Required")
                     .setMessage("Permission required to save photo.")
-                    .setPositiveButton("Accept") { dialog, id ->
+                    .setPositiveButton("Accept") { dialog, _ ->
                         requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, requestCode = 0)
                         dialog.dismiss()
                     }
-                    .setNegativeButton("Deny") { dialog, id -> dialog.cancel() }
+                    .setNegativeButton("Deny") { dialog, _ -> dialog.cancel() }
                     .show()
             }
         }
@@ -477,7 +465,7 @@ class WallpaperActivity : AppCompatActivity() {
             put(MediaStore.Images.Media.DISPLAY_NAME, photo.fileName)
             put(MediaStore.Images.Media.MIME_TYPE, "image/png")
         }
-    )?.let {
+    )?.let { it ->
         contentResolver.openOutputStream(it).use {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
         }

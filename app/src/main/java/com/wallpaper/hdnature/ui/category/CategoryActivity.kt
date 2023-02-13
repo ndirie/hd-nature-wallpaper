@@ -3,18 +3,15 @@ package com.wallpaper.hdnature.ui.category
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.isVisible
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.singa.wallpaper.adapter.WallpaperPhotoAdapter
-import com.wallpaper.hdnature.R
 import com.wallpaper.hdnature.adapter.WallpaperLoadState
 import com.wallpaper.hdnature.data.model.category.CategoryModel
 import com.wallpaper.hdnature.databinding.ActivityCategoryBinding
@@ -45,7 +42,7 @@ class CategoryActivity : AppCompatActivity() {
         adapter = WallpaperPhotoAdapter { wallpaper, view ->
             val intent = Intent(this, WallpaperActivity::class.java)
             intent.putExtra(WALLPAPER_MODEL_EXTRA, wallpaper)
-            val options = ActivityOptions.makeSceneTransitionAnimation(
+            ActivityOptions.makeSceneTransitionAnimation(
                 this,
                 view,
                 "image_transition"

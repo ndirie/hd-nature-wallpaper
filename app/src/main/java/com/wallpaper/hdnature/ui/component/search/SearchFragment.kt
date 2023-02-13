@@ -3,23 +3,19 @@ package com.wallpaper.hdnature.ui.component.search
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.wallpaper.hdnature.R
 import com.wallpaper.hdnature.adapter.CategoryAdapter
 import com.wallpaper.hdnature.adapter.CategoryPagerAdapter
 import com.wallpaper.hdnature.data.model.category.CategoryModel
 import com.wallpaper.hdnature.databinding.FragmentSearchBinding
 import com.wallpaper.hdnature.ui.category.CategoryActivity
-import com.wallpaper.hdnature.ui.photo.WallpaperActivity
 import com.wallpaper.hdnature.utils.CATEGORY_MODEL_EXTRA
 import com.wallpaper.hdnature.utils.QUERY_EXTRA
-import com.wallpaper.hdnature.utils.WALLPAPER_MODEL_EXTRA
 import com.wallpaper.hdnature.utils.ext.autoScroll
 import com.wallpaper.hdnature.utils.ext.hideKeyboard
 
@@ -33,7 +29,6 @@ class SearchFragment : Fragment() {
     private lateinit var adapter: CategoryAdapter
     private lateinit var pagerAdapter: CategoryPagerAdapter
     private lateinit var layoutManager: StaggeredGridLayoutManager
-    private var categoryList: List<CategoryModel>? = null
 
     private var _binding: FragmentSearchBinding? = null
     private val binding: FragmentSearchBinding
@@ -61,10 +56,10 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         adapter = CategoryAdapter(requireContext(),
-            CategoryModel.getOtherCategories()) { imageView, textView, model ->
+            CategoryModel.getOtherCategories()) { imageView, _, model ->
             val intent = Intent(requireContext(), CategoryActivity::class.java)
             intent.putExtra(CATEGORY_MODEL_EXTRA, model)
-            val options = ActivityOptions.makeSceneTransitionAnimation(
+            ActivityOptions.makeSceneTransitionAnimation(
                 requireActivity(),
                 imageView,
                 "image_transition"
@@ -74,10 +69,10 @@ class SearchFragment : Fragment() {
             ).toBundle())
         }
         pagerAdapter = CategoryPagerAdapter(requireContext(),
-            CategoryModel.getPagerCategories()) { imageView, textView, model ->
+            CategoryModel.getPagerCategories()) { imageView, _, model ->
             val intent = Intent(requireContext(), CategoryActivity::class.java)
             intent.putExtra(CATEGORY_MODEL_EXTRA, model)
-            val options = ActivityOptions.makeSceneTransitionAnimation(
+            ActivityOptions.makeSceneTransitionAnimation(
                 requireActivity(),
                 imageView,
                 "image_transition"

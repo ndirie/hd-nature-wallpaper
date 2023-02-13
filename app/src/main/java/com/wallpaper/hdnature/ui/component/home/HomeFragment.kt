@@ -3,18 +3,16 @@ package com.wallpaper.hdnature.ui.component.home
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.singa.wallpaper.adapter.WallpaperPhotoAdapter
-import com.wallpaper.hdnature.R
 import com.wallpaper.hdnature.adapter.WallpaperLoadState
 import com.wallpaper.hdnature.databinding.FragmentHomeBinding
 import com.wallpaper.hdnature.ui.photo.WallpaperActivity
@@ -50,7 +48,7 @@ class HomeFragment : Fragment() {
         adapter = WallpaperPhotoAdapter { wallpaper, imageView ->
             val intent = Intent(requireContext(), WallpaperActivity::class.java)
             intent.putExtra(WALLPAPER_MODEL_EXTRA, wallpaper)
-            val options = ActivityOptions.makeSceneTransitionAnimation(
+            ActivityOptions.makeSceneTransitionAnimation(
                 requireActivity(),
                 imageView,
                 "image_transition"
