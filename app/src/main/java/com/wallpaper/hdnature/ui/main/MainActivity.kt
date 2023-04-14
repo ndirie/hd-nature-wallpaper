@@ -13,6 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.ads.mediationtestsuite.MediationTestSuite
 import com.wallpaper.hdnature.R
 import com.wallpaper.hdnature.adapter.HeaderPagerAdapter
 import com.wallpaper.hdnature.databinding.ActivityMainBinding
@@ -35,7 +36,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
 
     private lateinit var headerPagerAdapter: HeaderPagerAdapter
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -43,8 +43,9 @@ class MainActivity : AppCompatActivity() {
         setupNavigation()
         setupHeaderImages()
 
-    }
+        MediationTestSuite.launch(this)
 
+    }
     private fun setupNavigation() {
         toolbar = binding.appBar.toolbar
         setSupportActionBar(toolbar)

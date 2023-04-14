@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
     id 'kotlin-parcelize'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -15,9 +16,9 @@ android {
         applicationId "com.wallpaper.hdnature"
         minSdk 24
         targetSdk 33
-        versionCode 3
+        versionCode 4
         //ha ilaawin inaad badasho kii about-ka
-        versionName "1.1.1"
+        versionName "1.1.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -31,10 +32,10 @@ android {
     
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = '1.8'
     }
 
     buildFeatures {
@@ -48,14 +49,14 @@ dependencies {
     def paging_version = "3.1.1"
     def room_version = "2.5.0"
 
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.work:work-runtime-ktx:2.7.1'
-    implementation "androidx.fragment:fragment-ktx:1.5.5"
+    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.work:work-runtime-ktx:2.8.1'
+    implementation "androidx.fragment:fragment-ktx:1.5.6"
 
     implementation "com.google.dagger:hilt-android:2.44.2"
     kapt "com.google.dagger:hilt-compiler:2.44"
@@ -102,13 +103,14 @@ dependencies {
     kapt 'com.github.bumptech.glide:compiler:4.14.2'
     implementation 'jp.wasabeef:glide-transformations:4.3.0'
 
-    implementation 'com.google.android.gms:play-services-ads:21.5.0'
+    implementation 'com.google.android.gms:play-services-ads:22.0.0'
+    implementation 'com.google.android.ads:mediation-test-suite:3.0.0'
 
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
-    testImplementation "androidx.lifecycle:lifecycle-runtime-testing:$lifecycle_version"
+    testImplementation "androidx.lifecycle:lifecycle-runtime-testing:2.6.1"
     testImplementation "androidx.paging:paging-common:$paging_version"
     testImplementation 'junit:junit:4.13.2'
-    testImplementation "androidx.room:room-testing:$room_version"
+    testImplementation "androidx.room:room-testing:2.5.1"
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 

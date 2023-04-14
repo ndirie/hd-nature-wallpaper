@@ -36,7 +36,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@mipmap/ic_launcher2" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -52,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="1.1.1"
+                android:text="1.1.2"
                 android:id="@+id/version_tv"
                 android:textColor="@color/colorSecondary"
                 android:textSize="16sp" />

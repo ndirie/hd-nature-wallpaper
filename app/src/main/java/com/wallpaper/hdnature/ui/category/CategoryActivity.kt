@@ -11,6 +11,9 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import com.singa.wallpaper.adapter.WallpaperPhotoAdapter
 import com.wallpaper.hdnature.adapter.WallpaperLoadState
 import com.wallpaper.hdnature.data.model.category.CategoryModel
@@ -24,6 +27,7 @@ import com.wallpaper.hdnature.utils.ext.toast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.*
 
 @AndroidEntryPoint
 class CategoryActivity : AppCompatActivity() {
@@ -34,7 +38,6 @@ class CategoryActivity : AppCompatActivity() {
     private lateinit var layoutManager: GridLayoutManager
     private lateinit var toolbar: Toolbar
     private var categoryModel: CategoryModel? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCategoryBinding.inflate(layoutInflater)
@@ -80,6 +83,11 @@ class CategoryActivity : AppCompatActivity() {
             }
         }
 
+        MobileAds.initialize(this) {}
+        setupBannerAd()
+        val testDeviceIds = listOf("33BE2250B43518CCDA7DE426D04EE231")
+        val configuration = RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build()
+        MobileAds.setRequestConfiguration(configuration)
     }
 
     private fun setupToolbar(title: String){
@@ -149,6 +157,13 @@ class CategoryActivity : AppCompatActivity() {
         }
         setupLoading()
         setupAdapter()
+    }
+
+    private fun setupBannerAd() {
+        binding.apply {
+            val adRequest = AdRequest.Builder().build()
+            adView.loadAd(adRequest)
+        }
     }
 
 }
