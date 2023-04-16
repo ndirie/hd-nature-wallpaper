@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.gms.ads.AdRequest
 import com.singa.wallpaper.adapter.WallpaperPhotoAdapter
 import com.wallpaper.hdnature.adapter.WallpaperLoadState
 import com.wallpaper.hdnature.databinding.FragmentHomeBinding
@@ -95,6 +96,16 @@ class HomeFragment : Fragment() {
                     }
                 }
             }
+        }
+
+        setupBannerAd()
+
+    }
+
+    private fun setupBannerAd() {
+        val adRequest = AdRequest.Builder().build()
+        binding.apply {
+            adView.loadAd(adRequest)
         }
     }
 

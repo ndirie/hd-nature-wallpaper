@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 ads:adSize="BANNER"
                 android:elevation="100dp"
-                ads:adUnitId="ca-app-pub-4493428815220305/1848752140"
+                ads:adUnitId="@string/category_acti_banner_ad"
                 android:layout_gravity="center_horizontal" />
 
             <include

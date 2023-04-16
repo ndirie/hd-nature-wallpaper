@@ -14,6 +14,9 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.ads.mediationtestsuite.MediationTestSuite
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
+import com.wallpaper.hdnature.BuildConfig
 import com.wallpaper.hdnature.R
 import com.wallpaper.hdnature.adapter.HeaderPagerAdapter
 import com.wallpaper.hdnature.databinding.ActivityMainBinding
@@ -44,7 +47,10 @@ class MainActivity : AppCompatActivity() {
         setupHeaderImages()
 
         MediationTestSuite.launch(this)
-
+        MobileAds.initialize(this) {}
+        val testDeviceIds = listOf("33BE2250B43518CCDA7DE426D04EE231")
+        val configuration = RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build()
+        MobileAds.setRequestConfiguration(configuration)
     }
     private fun setupNavigation() {
         toolbar = binding.appBar.toolbar
@@ -109,16 +115,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun shareApp(){
-        try {
-            val msg = "Hey, check out ${getString(R.string.app_name)} at at: https://play.google.com/store/apps/details?id=com.wallpaper.hdnature"
-            val intent = Intent(Intent.ACTION_SEND)
-                .putExtra(Intent.EXTRA_TEXT, msg)
-                .setType("text/plain")
-            startActivity(intent)
-        }catch (e: ActivityNotFoundException){
-            toast("Can't share app")
-            e.printStackTrace()
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, "Hey check out my app (${getString(R.string.app_name)}) at: https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID)
+            putExtra(Intent.EXTRA_TITLE, getString(R.string.app_name))
+            flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+            type = "text/plain"
         }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
 
     }
 

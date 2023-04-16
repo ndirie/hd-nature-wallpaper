@@ -28,6 +28,12 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.wallpaper.hdnature.R
 import com.wallpaper.hdnature.data.model.photo.PhotoModel
@@ -63,7 +69,10 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class WallpaperActivity : AppCompatActivity() {
+    private var TAG = "WallpaperActivity"
     private lateinit var binding: ActivityWallpaperBinding
+
+    private var mInterstitialAd: InterstitialAd? = null
 
     private var screenMeasure: ScreenMeasure? = null
 
@@ -99,6 +108,66 @@ class WallpaperActivity : AppCompatActivity() {
         setTransparentStatusBar()
         createData()
 
+        setInterstitialAd()
+        initAd()
+    }
+
+    private fun showAd() {
+        if (mInterstitialAd == null) {
+            Log.d("TAG", "The interstitial ad wasn't ready yet.")
+            return
+        }
+        mInterstitialAd?.show(this)
+    }
+    private fun initAd() {
+        mInterstitialAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
+            override fun onAdClicked() {
+                // Called when a click is recorded for an ad.
+                Log.d(TAG, "Ad was clicked.")
+            }
+
+            override fun onAdDismissedFullScreenContent() {
+                // Called when ad is dismissed.
+                Log.d(TAG, "Ad dismissed fullscreen content.")
+                mInterstitialAd = null
+            }
+
+            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                // Called when ad fails to show.
+                Log.e(TAG, "Ad failed to show fullscreen content.")
+                mInterstitialAd = null
+            }
+
+            override fun onAdImpression() {
+                // Called when an impression is recorded for an ad.
+                Log.d(TAG, "Ad recorded an impression.")
+            }
+
+            override fun onAdShowedFullScreenContent() {
+                // Called when ad is shown.
+                Log.d(TAG, "Ad showed fullscreen content.")
+            }
+        }
+    }
+    private fun setInterstitialAd() {
+        val adRequest = AdRequest.Builder().build()
+
+        InterstitialAd.load(
+            /* context = */ this,
+            /* adUnitId = */ getString(R.string.wallpaper_act_interstitial_ad),
+            /* adRequest = */ adRequest,
+            /* loadCallback = */ object : InterstitialAdLoadCallback() {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Log.d(TAG, adError.toString())
+                    mInterstitialAd = null
+                }
+
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    Log.d(TAG, "Ad was loaded.")
+                    mInterstitialAd = interstitialAd
+                }
+            }
+        )
     }
 
     private fun createData() {
@@ -129,7 +198,10 @@ class WallpaperActivity : AppCompatActivity() {
                     wallpaperOptionsContainer.fadeVisibility(View.GONE)
                     wallpaperButton.fadeVisibility(View.VISIBLE)
                     animateZoomOut()
-                } else onBackPressedDispatcher.onBackPressed()
+                } else {
+                    onBackPressedDispatcher.onBackPressed()
+                    showAd()
+                }
             }
 
             fullImageView.setOnClickListener {
@@ -241,6 +313,7 @@ class WallpaperActivity : AppCompatActivity() {
                         toast("Loading.. Please wait")
                         return@setOnClickListener
                     }
+                    showAd()
                     downloadWallpaper(photo, 1)
                 }
 
@@ -334,6 +407,7 @@ class WallpaperActivity : AppCompatActivity() {
                 setupLoadingDialog(5000, "Set wallpaper done successfully")
                 setWallpaper(WallpaperFlag.HOME_SCREEN)
                 alertDialogBuilder.dismiss()
+                showAd()
             }
 
             lockScreenButton.setOnClickListener {
@@ -346,6 +420,7 @@ class WallpaperActivity : AppCompatActivity() {
                 alertDialogBuilder.dismiss()
                 setWallpaper(WallpaperFlag.BOTH)
                 setupLoadingDialog(5000, "Set wallpaper done successfully")
+                showAd()
             }
 
             useSystemCrop.setOnClickListener {
@@ -416,7 +491,8 @@ class WallpaperActivity : AppCompatActivity() {
             }
         }
     }*/
-    private fun downloadPhoto(photo: PhotoModel){
+
+    /*private fun downloadPhoto(photo: PhotoModel){
         if (hasWritePermission()){
             val url = getPhotoUrl(photo)
             lifecycleScope.launch {
@@ -424,7 +500,8 @@ class WallpaperActivity : AppCompatActivity() {
             }
             toast("Download started")
         } else requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, requestCode = 0)
-    }
+    }*/
+
     private fun downloadWallpaper(photo: PhotoModel, type: Int) {
         if (hasWritePermission())
             if (type == 1) {
@@ -547,7 +624,8 @@ class WallpaperActivity : AppCompatActivity() {
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.type = "text/plain"
             shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "My application name")
+            shareIntent.putExtra(Intent.EXTRA_EMAIL, "nd.soft.apps.info@gmail.com")
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Wallpaper from HNW - HD Nature Wallpapers app")
             var shareMessage = "\nLet me recommend you this application\n\n"
             shareMessage = """${shareMessage}http://play.google.com/store/apps/details?id=com.wallpaper.hdnature"""
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage)
@@ -568,11 +646,14 @@ class WallpaperActivity : AppCompatActivity() {
         val alert = alertDialog.create()
         alert.show()
         Handler(Looper.getMainLooper())
-            .postDelayed({
-                alert.dismiss()
-                if (message != null)
-                    toast(message)
-                         }, delay )
+            .postDelayed(
+                {
+                    alert.dismiss()
+                    if (message != null)
+                        toast(message)
+                },
+                delay,
+            )
     }
 
 }

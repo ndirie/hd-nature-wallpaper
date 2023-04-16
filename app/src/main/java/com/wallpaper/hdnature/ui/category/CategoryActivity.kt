@@ -84,10 +84,11 @@ class CategoryActivity : AppCompatActivity() {
         }
 
         MobileAds.initialize(this) {}
-        setupBannerAd()
         val testDeviceIds = listOf("33BE2250B43518CCDA7DE426D04EE231")
         val configuration = RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build()
         MobileAds.setRequestConfiguration(configuration)
+
+        setupBannerAd()
     }
 
     private fun setupToolbar(title: String){
@@ -160,8 +161,8 @@ class CategoryActivity : AppCompatActivity() {
     }
 
     private fun setupBannerAd() {
+        val adRequest = AdRequest.Builder().build()
         binding.apply {
-            val adRequest = AdRequest.Builder().build()
             adView.loadAd(adRequest)
         }
     }

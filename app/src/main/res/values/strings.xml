@@ -15,5 +15,8 @@
 
     <string name="my_gmail">nourdroidsoft@gmail.com</string>
     <string name="retry_tv">Retry</string>
+    <string name="wallpaper_act_interstitial_ad">ca-app-pub-4493428815220305/5781802889</string>
+    <string name="category_acti_banner_ad">ca-app-pub-4493428815220305/3916883415</string>
+    <string name="home_frag_banner_ad">ca-app-pub-4493428815220305/5565044999</string>
 
 </resources>

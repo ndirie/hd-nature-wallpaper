@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorOnSecondary"
     android:id="@+id/swipeLayout"
     tools:context=".ui.component.home.HomeFragment">
@@ -14,10 +14,28 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/recyclerview"/>
+
         <include
-            layout="@layout/load_state_item"
             android:id="@+id/loading_layout"
-            android:visibility="visible" />
+            layout="@layout/load_state_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            ads:layout_constraintEnd_toEndOf="parent"
+            ads:layout_constraintStart_toStartOf="parent"
+            ads:layout_constraintTop_toBottomOf="@+id/adView" />
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:elevation="100dp"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/home_frag_banner_ad"
+            ads:layout_constraintEnd_toEndOf="parent"
+            ads:layout_constraintStart_toStartOf="parent"
+            ads:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
